@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Daily_Expense extends Model
+class DailyExpense extends Model
 {
-    protected $table = 'daily_expenses';
+    protected $table = 'dailyexpenses';
      protected $fillable = [
         'admin_id',
         'amount',
-        'description',
-        'date'
+        'reason',
+        'entry_date'
     ];
 
     public function admin()

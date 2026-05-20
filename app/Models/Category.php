@@ -5,12 +5,12 @@ use App\Models\Admin;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 
-class Categorie extends Model
+class Category extends Model
 {
     protected $table='categories';
     protected $fillable = [
         'name',
-        'admins_id'
+        'admin_id'
     ];
 
     public function admin(){

@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('daily_expenses', function (Blueprint $table) {
+        Schema::create('dailyexpenses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('admins_id')->constrained()->onDelete('cascade');
+            $table->foreignId('admin_id')->constrained()->onDelete('cascade');
+            
             $table->decimal('amount',12,2);
             $table->string('reason');
             $table->date('entry_date');
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('daily_expenses');
+        Schema::dropIfExists('dailyexpenses');
     }
 };
