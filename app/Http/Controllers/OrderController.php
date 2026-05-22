@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\Order;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
@@ -9,21 +9,39 @@ use App\Http\Requests\UpdateOrderRequest;
 class OrderController extends Controller
 {
     
-    public function index()
-    {
-        return response()->json(Order::all(), 200);
-    }
+ public function store(StoreOrderRequest $request)
+{
+    return DB::transaction(function () use ($request) {
+        
+        $order = Order::create([
+            'admin_id'    => $request->admin_id,
+            'total_price' => $request->total_price,
+            'status'      => 'completed',
+        ]);
 
-    
-    public function store(StoreOrderRequest $request)
-    {
-        $order = Order::create($request->validated());
+        foreach ($request->items as $item) {
+            $product = \App\Models\Product::findOrFail($item['product_id']);
 
-        return response()->json([
-            'message' => 'Order created successfully',
-            'data' => $order
-        ], 201);
-    }
+            
+            if ($product->quantity < $item['quantity']) {
+                throw new \Exception("الكمية غير كافية للمنتج: {$product->name}");
+            }
+
+            
+            $order->orderItems()->create([
+                'product_id' => $item['product_id'],
+                'quantity'   => $item['quantity'],
+                'unit_price' => $product->price,
+            ]);
+
+            
+            $product->decrement('quantity', $item['quantity']);
+        }
+
+        return response()->json(['message' => 'تم تسجيل المبيعات وتحديث المخزن'], 201);
+    });
+}
+
 
     
     public function show(string $id)

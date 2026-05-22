@@ -12,7 +12,7 @@ class CategoryController extends Controller
     
     public function index()
     {
-        return response()->json(Category::all(), 200);
+        return response()->json(Category::withCount('products')->get(), 200);
     }
 
     
@@ -48,14 +48,23 @@ class CategoryController extends Controller
     }
 
     
-    public function destroy(string $id)
+      public function destroy(string $id)
     {
+
         $category = Category::findOrFail($id);
 
-        $category->delete();
+        if ($category->products()->exists()) {
+        return response()->json([
+            'message' => 'عذراً، لا يمكن حذف هذا القسم لأنه يحتوي على منتجات مرتبطة به. قم بنقل المنتجات أو حذفها أولاً.'
+        ], 400); 
+    }
+
+    
+         $category->delete();
 
         return response()->json([
-            'message' => 'Category deleted successfully'
-        ], 200);
+        'message' => 'تم حذف القسم بنجاح'
+         ], 200);
     }
-}
+
+    }

@@ -23,14 +23,23 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-              'name' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'price' => 'required|numeric',
-        'quantity' => 'required|integer',
-        'image' => 'nullable|string',
-
-        'category_id' => 'required|exists:categories,id'
+         'name' => 'required|string|max:255',
+        'price' => 'required|numeric|min:0',    
+        'quantity' => 'required|integer|min:0', 
+        'category_id' => 'required|exists:categories,id',
+      
     ];
         
     }
+
+     public function messages(): array
+    {
+        return [
+            'name.required'        => 'اسم المنتج مطلوب.',
+            'price.min'            => 'لا يمكن أن يكون السعر أقل من صفر.',
+            'quantity.min'         => 'لا يمكن أن تكون الكمية أقل من صفر.',
+            'category_id.exists'   => 'القسم المختار غير موجود في النظام.',
+        ];
+    }
 }
+

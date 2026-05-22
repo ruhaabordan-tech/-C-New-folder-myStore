@@ -10,13 +10,7 @@ use App\Http\Requests\UpdateProductRequest;
 class ProductController extends Controller
 {
     
-    public function index()
-    {
-        return response()->json(Product::all(), 200);
-    }
-
-    
-    public function store(StoreProductRequest $request)
+  public function store(StoreProductRequest $request)
     {
         $product = Product::create($request->validated());
 
@@ -27,12 +21,35 @@ class ProductController extends Controller
     }
 
     
-    public function show(string $id)
-    {
-        $product = Product::findOrFail($id);
+   public function index(Request $request)
+{
+    $query = Product::with('category');
 
-        return response()->json($product, 200);
+    if ($request->filled('name')) {
+        $query->where('name', 'like', '%' . $request->name . '%');
     }
+
+    if ($request->filled('category_id')) {
+        $query->where('category_id', $request->category_id);
+    }
+
+    if ($request->has('low_stock')) {
+        $query->where('quantity', '<', 5);
+    }
+
+    return response()->json($query->get(), 200);
+}
+
+
+    
+
+       public function show(string $id)
+         {
+             $product = Product::with('category')->findOrFail($id);
+               return response()->json($product, 200);
+          }
+
+    
 
     
     public function update(UpdateProductRequest $request, string $id)

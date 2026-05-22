@@ -2,48 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTaskRequest;
-use App\Http\Requests\UpdateTaskRequest;
+
+use App\Http\Requests\StoreAdminRequest; 
+use App\Http\Requests\UpdateAdminRequest;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    
+    public function index()
+    {
+        $admin = Admin::first();
+        if (!$admin) {
+            return response()->json(['message' => 'لا يوجد مسؤول مسجل حالياً'], 404);
+        }
+        return response()->json($admin, 200);
+    }
 
- public function index(){
-$task=Admin::first();
- return response()->json($task,200);
- }
-
- public function store(StoreTaskRequest $request)
- {
-    $task=Admin::create($request->validated());
+    public function store(StoreAdminRequest $request)
+    {
+        $admin = Admin::create($request->validated());
         return response()->json([
-            'message' => 'Admin created successfully',
-            'data' => $task
+            'message' => 'تم إنشاء حساب المسؤول بنجاح',
+            'data' => $admin
         ], 201);
- }
+    }
 
+    public function update(UpdateAdminRequest $request, string $id)
+    {
+        $admin = Admin::findOrFail($id);
+        $admin->update($request->validated());
+        
+        return response()->json([
+            'message' => 'تم تحديث بيانات المسؤول بنجاح', 
+            'data'=> $admin
+        ], 200);
+    }
 
-  public function update(UpdateTaskRequest $request,string $id)
- {
-    $task=Admin::findOrFail($id);
-    $task->update($request->validated());
-   return response()->json([
-   'message' => 'Admin updated successfully', 
-   'data'=> $task]
-   ,200);
- }
-
- 
-
-  public function destroy(Request $request,string $id)
- {
-    $task=Admin::findOrFail($id);
-    $task->delete( );
-   return response()->json([
-    'message' => 'Admin deleted successfully', 
-    ],204);
- }
-
+    public function destroy(string $id)
+    {
+        $admin = Admin::findOrFail($id);
+        $admin->delete();
+        
+        return response()->json([
+            'message' => 'تم حذف المسؤول بنجاح', 
+        ], 200);
+    }
 }

@@ -20,16 +20,15 @@ class UpdateProductRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
-    {
-        return [
-                    'name' => 'sometimes|string|max:255',
-        'description' => 'nullable|string',
-        'price' => 'sometimes|numeric',
-        'quantity' => 'sometimes|integer',
-        'image' => 'nullable|string',
+  
+  public function rules(): array
+{
+    return [
+        'name'        => 'sometimes|string|max:255',
+        'price'       => 'sometimes|numeric|min:0',    
+        'quantity'    => 'sometimes|integer|min:0', 
+        'category_id' => 'sometimes|exists:categories,id',
+    ];
 
-        'category_id' => 'sometimes|exists:categories,id'
-        ];
     }
 }
