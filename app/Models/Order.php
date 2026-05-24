@@ -10,6 +10,9 @@ class Order extends Model
       'admin_id','total_price','status'
     ];
 
+     protected $hidden = ['admin_id', 'admin']; 
+
+    
     public function admin(){
         return $this->belongsTo(Admin::class);
     }

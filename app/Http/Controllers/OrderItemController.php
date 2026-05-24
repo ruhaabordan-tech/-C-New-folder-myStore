@@ -11,7 +11,9 @@ class OrderItemController extends Controller
     
     public function index()
     {
-        return response()->json(OrderItem::all(), 200);
+    $items = OrderItem::with(['product:name', 'order:status'])->get();
+    $items->makeHidden(['product_id', 'order_id']);
+    return response()->json($items, 200);
     }
 
     
@@ -20,7 +22,7 @@ class OrderItemController extends Controller
         $orderItem = OrderItem::create($request->validated());
 
         return response()->json([
-            'message' => 'Order item created successfully',
+            'message' => 'تم إضافة الصنف إلى الطلب بنجاح',
             'data' => $orderItem
         ], 201);
     }
@@ -41,7 +43,7 @@ class OrderItemController extends Controller
         $orderItem->update($request->validated());
 
         return response()->json([
-            'message' => 'Order item updated successfully',
+            'message' => 'تم تحديث بيانات الصنف بنجاح',
             'data' => $orderItem
         ], 200);
     }
@@ -54,7 +56,7 @@ class OrderItemController extends Controller
         $orderItem->delete();
 
         return response()->json([
-            'message' => 'Order item deleted successfully'
+            'message' => 'تم إزالة المنتج من الفاتورة بنجاح'
         ], 200);
     }
 }

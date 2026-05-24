@@ -27,4 +27,15 @@ class UpdateCategoryRequest extends FormRequest
            'admin_id'=>'sometimes|exists:admins,id'
         ];
     }
+
+    public function messages(): array
+{
+    return [
+        'name.required'     => 'يجب إدخال اسم القسم (مثلاً: إلكترونيات، منظفات).',
+        'name.string'       => 'اسم القسم يجب أن يكون نصاً وليس أرقاماً.',
+        'admin_id.required' => 'يجب ربط القسم بمسؤول نظام.',
+        'admin_id.exists'   => 'عذراً، المسؤول المختار غير موجود في سجلاتنا.',
+    ];
+}
+
 }

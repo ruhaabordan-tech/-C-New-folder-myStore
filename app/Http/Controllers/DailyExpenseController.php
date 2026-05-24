@@ -21,7 +21,7 @@ class DailyExpenseController extends Controller
         $expense = DailyExpense::create($request->validated());
 
         return response()->json([
-            'message' => 'Expense created successfully',
+            'message' => 'تم تسجيل المصروف بنجاح',
             'data' => $expense
         ],201);
     }
@@ -42,7 +42,7 @@ class DailyExpenseController extends Controller
         $expense->update($request->validated());
 
         return response()->json([
-            'message' => 'Expense updated successfully',
+            'message' => 'تم تحديث بيانات المصروف بنجاح',
             'data' => $expense
         ],200);
     }
@@ -55,7 +55,7 @@ class DailyExpenseController extends Controller
         $expense->delete();
 
         return response()->json([
-            'message' => 'Expense deleted successfully'
+            'message' => 'تم حذف المصروف بنجاح'
         ],200);
     }
 }

@@ -29,4 +29,20 @@ class UpdateOrderItemRequest extends FormRequest
         'price' => 'sometimes|numeric'
         ];
     }
+
+    public function messages(): array
+{
+    return [
+        'order_id.required'   => 'يجب ربط الصنف بطلب بيع موجود.',
+        'order_id.exists'     => 'رقم الطلب المختار غير صحيح أو غير موجود.',
+        'product_id.required' => 'يرجى اختيار المنتج المراد إضافته للفاتورة.',
+        'product_id.exists'   => 'المنتج المختار غير موجود في المخزن.',
+        'quantity.required'   => 'يرجى تحديد الكمية المطلوبة.',
+        'quantity.integer'    => 'الكمية يجب أن تكون رقماً صحيحاً.',
+        'quantity.min'        => 'يجب أن تكون الكمية 1 على الأقل.',
+        'price.required'      => 'يجب تسجيل سعر البيع لهذا الصنف.',
+        'price.numeric'       => 'السعر يجب أن يكون قيمة رقمية.',
+    ];
+}
+
 }

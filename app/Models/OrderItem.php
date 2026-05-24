@@ -14,6 +14,7 @@ class OrderItem extends Model
         'quantity',
         'price'
     ];
+       protected $hidden = ['product_id', 'order_id'];
 
     public function order()
     {

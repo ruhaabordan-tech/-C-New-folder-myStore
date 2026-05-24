@@ -29,4 +29,16 @@ class StoreAdminRequest extends FormRequest
         'address'=>'required'
         ];
     }
+
+    public function messages(): array
+{
+    return [
+        'name.required'    => 'يرجى إدخال اسم المسؤول، هذا الحقل مطلوب.',
+        'email.required'   => 'البريد الإلكتروني مطلوب للتواصل مع المسؤول.',
+        'phone.required'   => 'رقم الهاتف مطلوب لتسجيل بيانات المسؤول.',
+        'phone.integer'    => 'يجب أن يكون رقم الهاتف عبارة عن أرقام فقط.',
+        'address.required' => 'يرجى إدخال عنوان المسؤول.',
+    ];
+}
+
 }

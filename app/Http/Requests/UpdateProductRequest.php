@@ -21,14 +21,31 @@ class UpdateProductRequest extends FormRequest
      * @return array<string, ValidationRule|array<mixed>|string>
      */
   
-  public function rules(): array
+public function rules(): array
 {
     return [
-        'name'        => 'sometimes|string|max:255',
-        'price'       => 'sometimes|numeric|min:0',    
-        'quantity'    => 'sometimes|integer|min:0', 
-        'category_id' => 'sometimes|exists:categories,id',
+        'name'               => 'required|string',
+        'price'              => 'required|numeric',
+        'quantity'           => 'required|integer',
+        'description'        => 'required|string', 
+        'min_quantity_alert' => 'nullable|integer', 
+        'image'              => 'nullable|string',  
+        'category_name' => 'required|string',
     ];
+}
 
-    }
+public function messages(): array
+{
+    return [
+        'name.required'          => 'يرجى إدخال اسم المنتج، هذا الحقل إلزامي.',
+        'price.required'         => 'يجب تحديد سعر المنتج.',
+        'price.numeric'          => 'سعر المنتج يجب أن يكون رقماً.',
+        'quantity.required'      => 'يرجى إدخال الكمية المتوفرة في المخزن.',
+        'quantity.integer'       => 'الكمية يجب أن تكون عدداً صحيحاً.',
+        'description.required'   => 'يرجى كتابة وصف بسيط للمنتج.',
+        'category_name.required' => 'يجب إدخال اسم القسم الذي ينتمي إليه المنتج.',
+    ];
+}
+
+
 }

@@ -44,44 +44,45 @@ public function dailyProfit(Request $request)
 }
 
 
-
-public function monthlyReport()
+public function monthlyReport(Request $request)
 {
+    $month = $request->query('month', now()->month);
+    $year = $request->query('year', now()->year);
+
     
-    $start = now()->startOfMonth();
-    $end = now()->endOfMonth();
+    $targetDate = \Carbon\Carbon::createFromDate($year, $month, 1);
+    $start = $targetDate->copy()->startOfMonth();
+    $end = $targetDate->copy()->endOfMonth();
 
     
     $sales = Order::where('status', 'completed')
                   ->whereBetween('created_at', [$start, $end])
                   ->sum('total_price');
 
-    
     $expenses = DailyExpense::whereBetween('entry_date', [$start, $end])
                             ->sum('amount');
 
-    
     $lowStockProducts = Product::where('quantity', '<', 5)
                                ->get(['name', 'quantity']);
 
     return response()->json([
-        'month_name'     => now()->format('F Y'),
-        'monthly_sales'  => $sales,
-        'monthly_expenses' => $expenses,
-        'net_profit'     => $sales - $expenses,
+        'report_for'        => $targetDate->format('F Y'), 
+        'monthly_sales'     => $sales,
+        'monthly_expenses'  => $expenses,
+        'net_profit'        => $sales - $expenses,
         'low_stock_details' => $lowStockProducts, 
     ], 200);
 }
 
 
 
+
 public function lowStockReport()
 {
     
-    $products = Product::where('quantity', '<', 5)
-                       ->orderBy('quantity', 'asc') 
-                       ->get(['name', 'quantity']);
-
+    $products = Product::whereRaw('quantity < min_quantity_alert')
+                   ->orderBy('quantity', 'asc') 
+                   ->get(['name', 'quantity', 'min_quantity_alert']);
     
     if ($products->isEmpty()) {
         return response()->json([
@@ -117,20 +118,25 @@ public function inventoryValue()
 
 public function topSelling()
 {
-
     $topProducts = OrderItem::selectRaw('product_id, SUM(quantity) as total_qty')
         ->groupBy('product_id')
         ->orderBy('total_qty', 'desc')
         ->take(5)
-        ->with('product:id,name,price')
-        ->get();
+        ->with('product:id,name') 
+        ->get()
+        ->map(function ($item) {
+            return [
+                'product_name' => $item->product->name ?? 'منتج محذوف',
+                'units_sold'   => (int) $item->total_qty,
+            ];
+        });
 
     return response()->json([
-        'report_type' => 'الأكثر مبيعاً',
-        'top_selling_products' => $topProducts,
-        'currency' => 'ل.س'
+        'report_type' => 'قائمة الأكثر مبيعاً',
+        'data'        => $topProducts
     ], 200);
 }
+
 
 
 

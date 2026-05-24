@@ -24,9 +24,23 @@ class UpdateDailyExpenseRequest extends FormRequest
     {
         return [
                   'admin_id' => 'sometimes|exists:admins,id',
-        'amount' => 'sometimes|numeric|min:0',
+        'amount' => 'sometimes|numeric|min:1',
         'reason' => 'nullable|string',
         'entry_date' => 'sometimes|date'
         ];
     }
+
+    public function messages(): array
+{
+    return [
+        'admin_id.required'   => 'يجب ربط المصروف بمسؤول نظام.',
+        'admin_id.exists'     => 'المسؤول المختار غير موجود في سجلاتنا.',
+        'amount.required'     => 'يرجى إدخال مبلغ المصروف.',
+        'amount.numeric'      => 'يجب أن يكون المبلغ قيمة رقمية.',
+        'amount.min'          => 'لا يمكن تسجيل مصروف بقيمة صفر، يرجى إدخال مبلغ صحيح.',
+        'entry_date.required' => 'يرجى تحديد تاريخ تسجيل هذا المصروف.',
+        'entry_date.date'     => 'تنسيق التاريخ غير صحيح، يرجى اختيار تاريخ صالح.',
+    ];
+}
+
 }

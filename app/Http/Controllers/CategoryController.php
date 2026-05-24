@@ -21,7 +21,7 @@ class CategoryController extends Controller
         $category = Category::create($request->validated());
 
         return response()->json([
-            'message' => 'Category created successfully',
+            'message' => 'تم اضافة القسم بنجاح',
             'data' => $category
         ], 201);
     }
@@ -42,7 +42,7 @@ class CategoryController extends Controller
         $category->update($request->validated());
 
         return response()->json([
-            'message' => 'Category updated successfully',
+            'message' => 'تم تحديث القسم بنجاح',
             'data' => $category
         ], 200);
     }

@@ -20,26 +20,33 @@ class StoreProductRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
-    {
-        return [
-         'name' => 'required|string|max:255',
-        'price' => 'required|numeric|min:0',    
-        'quantity' => 'required|integer|min:0', 
-        'category_id' => 'required|exists:categories,id',
-      
+  
+      public function rules(): array
+{
+    return [
+        'name'               => 'required|string',
+        'price'              => 'required|numeric',
+        'quantity'           => 'required|integer',
+        'description'        => 'required|string', 
+        'min_quantity_alert' => 'nullable|integer', 
+        'image'              => 'nullable|string',  
+        'category_name' => 'required|string',
     ];
-        
-    }
+}
 
-     public function messages(): array
-    {
-        return [
-            'name.required'        => 'اسم المنتج مطلوب.',
-            'price.min'            => 'لا يمكن أن يكون السعر أقل من صفر.',
-            'quantity.min'         => 'لا يمكن أن تكون الكمية أقل من صفر.',
-            'category_id.exists'   => 'القسم المختار غير موجود في النظام.',
-        ];
-    }
+    
+public function messages(): array
+{
+    return [
+        'name.required'          => 'يرجى إدخال اسم المنتج، هذا الحقل إلزامي.',
+        'price.required'         => 'يجب تحديد سعر المنتج.',
+        'price.numeric'          => 'سعر المنتج يجب أن يكون رقماً.',
+        'quantity.required'      => 'يرجى إدخال الكمية المتوفرة في المخزن.',
+        'quantity.integer'       => 'الكمية يجب أن تكون عدداً صحيحاً.',
+        'description.required'   => 'يرجى كتابة وصف بسيط للمنتج.',
+        'category_name.required' => 'يجب إدخال اسم القسم الذي ينتمي إليه المنتج.',
+    ];
+}
+
 }
 

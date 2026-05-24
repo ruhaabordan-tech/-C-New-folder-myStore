@@ -14,6 +14,9 @@ class DailyExpense extends Model
         'entry_date'
     ];
 
+     protected $hidden = ['admin_id', 'admin']; 
+
+
     public function admin()
     {
         return $this->belongsTo(Admin::class);
